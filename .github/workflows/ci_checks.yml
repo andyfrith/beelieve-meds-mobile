@@ -1,0 +1,32 @@
+name: Lint and Test on PR
+
+on:
+  pull_request:
+    branches:
+      - master
+      - development
+
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # Fetch all history for linting/testing purposes if needed
+        fetch-depth: 0
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Use the Node.js version appropriate for your project
+
+    - name: Install dependencies
+      run: npm install # or yarn install / pnpm install, depending on your package manager
+
+    - name: Run lint
+      run: npm run lint # or yarn lint, ensure this script is defined in your package.json
+
+    - name: Run tests
+      run: npm run test # or yarn test, ensure this script is defined in your package.json
