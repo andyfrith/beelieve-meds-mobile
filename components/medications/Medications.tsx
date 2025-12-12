@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import MedicationList from "./MedicationList";
 
-export function Medications() {
+export function Medications({ headerTitle }: { headerTitle?: string }) {
   const { data: medications, isLoading, error } = useMedications();
 
   if (isLoading) {
@@ -17,10 +17,8 @@ export function Medications() {
 
   if (error) {
     return (
-      <View style={{ padding: 16, alignItems: "center" }}>
-        <Text style={{ color: Colors.dark.text, marginBottom: 8 }}>
-          Failed to load medications
-        </Text>
+      <View style={styles.errorState}>
+        <Text style={styles.errorStateText}>Failed to load medications</Text>
         <Text style={{ color: Colors.muted }}>
           {error instanceof Error ? error.message : "Please try again later"}
         </Text>
@@ -41,9 +39,11 @@ export function Medications() {
 
   return (
     <View style={styles.section}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Today&apos;s Meds</Text>
-      </View>
+      {headerTitle && (
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>{headerTitle}</Text>
+        </View>
+      )}
       <MedicationList medications={medications} />
     </View>
   );
@@ -51,7 +51,7 @@ export function Medications() {
 
 const styles = StyleSheet.create({
   section: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     alignItems: "center",
-    padding: 30,
+    padding: 40,
     backgroundColor: "white",
     borderRadius: 16,
     marginTop: 10,
@@ -83,60 +83,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
   },
-  addMedicationButton: {
-    backgroundColor: "#ffbf00",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  addMedicationButtonText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  medicationCard: {
-    flexDirection: "row",
+  errorState: {
     alignItems: "center",
+    padding: 30,
     backgroundColor: "white",
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    marginTop: 10,
   },
-  medicationBadge: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 15,
-  },
-  medicineName: {
+  errorStateText: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 4,
-  },
-  doseInfo: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  dosageInfo: {
-    fontSize: 14,
     color: "#666",
-    marginBottom: 4,
-  },
-  doseTime: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  timeText: {
-    marginLeft: 5,
-    color: "#666",
-    fontSize: 14,
+    marginBottom: 10,
   },
 });

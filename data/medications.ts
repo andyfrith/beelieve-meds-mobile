@@ -19,6 +19,7 @@ export interface Medication {
 export const medications: Medication[] = [
   {
     id: "1",
+    color: "#4CAF50",
     name: "Medication 1",
     dosage: "10mg",
     frequency: "daily",
@@ -28,6 +29,7 @@ export const medications: Medication[] = [
   },
   {
     id: "2",
+    color: "#2196F3",
     name: "Medication 2",
     dosage: "20mg",
     frequency: "daily",

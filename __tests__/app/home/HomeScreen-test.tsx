@@ -13,11 +13,16 @@ import HomeScreen from "@/app/home/index";
 
 const mockReplace = jest.fn();
 
-jest.mock("expo-router", () => ({
-  router: {
-    replace: (path: string) => mockReplace(path),
-  },
-}));
+jest.mock("expo-router", () => {
+  const { TouchableOpacity } = jest.requireActual("react-native");
+  return {
+    router: {
+      replace: (path: string) => mockReplace(path),
+    },
+    Link: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) => 
+      asChild ? children : <TouchableOpacity>{children}</TouchableOpacity>,
+  };
+});
 
 jest.mock("@expo/vector-icons", () => {
   const { View } = jest.requireActual("react-native");
@@ -31,6 +36,15 @@ jest.mock("@expo/vector-icons", () => {
     }) => <View testID={testID || `icon-${name}`} />,
     Ionicons: ({ name, testID }: { name: string; testID?: string }) => (
       <View testID={testID || `icon-${name}`} />
+    ),
+  };
+});
+
+jest.mock("expo-linear-gradient", () => {
+  const { View } = jest.requireActual("react-native");
+  return {
+    LinearGradient: ({ children, style }: { children: React.ReactNode; style?: object }) => (
+      <View style={style}>{children}</View>
     ),
   };
 });
