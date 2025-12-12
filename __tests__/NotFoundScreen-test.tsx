@@ -1,11 +1,13 @@
-import { render } from "@testing-library/react-native";
+import { render, screen } from "@testing-library/react-native";
 
 import NotFoundScreen from "@/app/+not-found";
 
 jest.mock("expo-router", () => {
-  const { Text } = require("react-native");
+  const { Text } = jest.requireActual("react-native");
   return {
-    Link: ({ children }: { children: React.ReactNode }) => <Text>{children}</Text>,
+    Link: ({ children }: { children: React.ReactNode }) => (
+      <Text>{children}</Text>
+    ),
     Stack: {
       Screen: () => null,
     },
@@ -14,9 +16,8 @@ jest.mock("expo-router", () => {
 
 describe("<NotFoundScreen />", () => {
   test("renders the go back link text correctly", () => {
-    const { getByText } = render(<NotFoundScreen />);
-
-    getByText("Go back to Home screen!");
+    render(<NotFoundScreen />);
+    const element = screen.getByText("Go back to Home screen!");
+    expect(element).toBeOnTheScreen();
   });
 });
-
