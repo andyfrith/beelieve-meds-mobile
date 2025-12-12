@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { Colors } from "@/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -9,6 +10,7 @@ export default function HomeScreen() {
       style={styles.gradient}
     >
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <Header />
         <View style={styles.content}>
           <Text>Beelieve!</Text>
         </View>
