@@ -1,7 +1,8 @@
 import { Header } from "@/components/Header";
+import { Medications } from "@/components/medications/Medications";
 import { Colors } from "@/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
   return (
@@ -12,7 +13,7 @@ export default function HomeScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Header />
         <View style={styles.content}>
-          <Text>Beelieve!</Text>
+          <Medications />
         </View>
       </ScrollView>
     </LinearGradient>
