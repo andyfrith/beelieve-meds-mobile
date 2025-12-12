@@ -1,11 +1,9 @@
 import { Header } from "@/components/Header";
-import { Actions } from "@/components/actions/Actions";
-import { Medications } from "@/components/medications/Medications";
 import { Colors } from "@/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-export default function HomeScreen() {
+export default function AddMedicationScreen() {
   return (
     <LinearGradient
       colors={[Colors.honey.color2, Colors.honey.color1]}
@@ -14,8 +12,7 @@ export default function HomeScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Header />
         <View style={styles.content}>
-          <Actions />
-          <Medications headerTitle="Today's Meds" />
+          <Text>Add Medication</Text>
         </View>
       </ScrollView>
     </LinearGradient>
