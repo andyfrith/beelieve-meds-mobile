@@ -1,7 +1,8 @@
 import { Header } from "@/components/Header";
+import AddMedicationForm from "@/components/medications/AddMedicationForm";
 import { Colors } from "@/constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function AddMedicationScreen() {
   return (
@@ -12,7 +13,7 @@ export default function AddMedicationScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Header />
         <View style={styles.content}>
-          <Text>Add Medication</Text>
+          <AddMedicationForm />
         </View>
       </ScrollView>
     </LinearGradient>
