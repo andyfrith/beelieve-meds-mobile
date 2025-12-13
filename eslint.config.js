@@ -14,9 +14,9 @@ module.exports = defineConfig([
     files: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
     ...testingLibrary.configs["flat/react"],
   },
-  {
-    rules: {
-      "prettier/prettier": "off",
-    },
-  },
+  // {
+  //   rules: {
+  //     "prettier/prettier": "off",
+  //   },
+  // },
 ]);
