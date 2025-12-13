@@ -10,3 +10,13 @@ export const useMedications = () => {
     },
   });
 };
+
+export const useMedication = (id: string) => {
+  return useQuery({
+    queryKey: ["medication", id],
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return medicationService.getById(id);
+    },
+  });
+};

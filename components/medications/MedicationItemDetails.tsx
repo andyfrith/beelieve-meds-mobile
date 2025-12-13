@@ -1,48 +1,43 @@
 import { Colors } from "@/constants/theme";
 import { Medication } from "@/data/medications";
 import { Ionicons } from "@expo/vector-icons";
-import { FlashList } from "@shopify/flash-list";
-import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
-const MedicationList = ({ medications }: { medications: Medication[] }) => {
+export default function MedicationItemDetails({
+  medication,
+}: {
+  medication: Medication;
+}) {
   return (
-    <FlashList
-      data={medications}
-      renderItem={({ item: medication }) => (
-        <Link
-          href={`/(modal)/(medication)/${medication.id}`}
-          style={styles.link}
+    <View style={styles.content}>
+      <View key={medication.id} style={styles.medicationCard}>
+        <View
+          style={[
+            styles.medicationBadge,
+            { backgroundColor: `${medication.color}15` },
+          ]}
         >
-          <View key={medication.id} style={styles.medicationCard}>
-            <View
-              style={[
-                styles.medicationBadge,
-                { backgroundColor: `${medication.color}15` },
-              ]}
-            >
-              <Ionicons name="medical" size={24} color={medication.color} />
-            </View>
-            <View style={styles.doseInfo}>
-              <View>
-                <Text style={styles.medicineName}>{medication.name}</Text>
-                <Text style={styles.dosageInfo}>{medication.dosage}</Text>
-              </View>
-              <View style={styles.doseTime}>
-                <Ionicons name="time-outline" size={16} color="#666" />
-                <Text style={styles.timeText}>
-                  {medication.times.join(" : ")}
-                </Text>
-              </View>
-            </View>
+          <Ionicons name="medical" size={24} color={medication.color} />
+        </View>
+        <View style={styles.doseInfo}>
+          <View>
+            <Text style={styles.medicineName}>{medication.name}</Text>
+            <Text style={styles.dosageInfo}>{medication.dosage}</Text>
           </View>
-        </Link>
-      )}
-    />
+          <View style={styles.doseTime}>
+            <Ionicons name="time-outline" size={16} color="#666" />
+            <Text style={styles.timeText}>{medication.times.join(" : ")}</Text>
+          </View>
+        </View>
+      </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
+  content: {
+    padding: 20,
+  },
   card: {
     margin: 16,
     padding: 16,
@@ -68,10 +63,6 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: Colors.muted,
-  },
-  link: {
-    paddingTop: 20,
-    fontSize: 20,
   },
   metadata: {
     // borderTopColor: Colors.light,
@@ -135,5 +126,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
-export default MedicationList;

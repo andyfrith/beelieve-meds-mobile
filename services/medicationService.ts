@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { medications } from "@/data/medications";
 import type { Medication } from "@/data/medications";
+import { medications } from "@/data/medications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 enum StorageKeys {
   MEDICATIONS = "@medications",
@@ -55,11 +55,23 @@ export const medicationService = {
   getAll: async (): Promise<Medication[]> => {
     try {
       const data = await AsyncStorage.getItem(StorageKeys.MEDICATIONS);
-      // console.log("getAll() data", data);
       return data ? JSON.parse(data) : [];
     } catch (error) {
       console.error("Error getting medications:", error);
       return [];
+    }
+  },
+  getById: async (id: string): Promise<Medication> => {
+    try {
+      const medications = await medicationService.getAll();
+      const index = medications.findIndex((med) => med.id === id);
+      if (index < 0) {
+        throw new Error("Medication not found for id: " + id);
+      }
+      return medications[index];
+    } catch (error) {
+      console.error("Error getting medication by id:", error);
+      throw error;
     }
   },
   clearAll: async (): Promise<void> => {
