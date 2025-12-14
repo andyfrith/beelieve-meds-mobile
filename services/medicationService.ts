@@ -22,10 +22,15 @@ export const medicationService = {
   },
   update: async (medication: Medication): Promise<void> => {
     try {
+      console.log("update() medication", medication);
       const medications = await medicationService.getAll();
+      console.log("update() medications", medications);
+
       const index = medications.findIndex((med) => med.id === medication.id);
+      console.log("update() index", index);
       if (index !== -1) {
         medications[index] = medication;
+        console.log("update() new medications", medications);
         await AsyncStorage.setItem(
           StorageKeys.MEDICATIONS,
           JSON.stringify(medications),

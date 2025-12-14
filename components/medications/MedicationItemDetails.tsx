@@ -21,7 +21,14 @@ export default function MedicationItemDetails({
         </View>
         <View style={styles.doseInfo}>
           <View>
+            {/* <Link
+              href={{
+                pathname: "/medications/add",
+                params: { id: medication.id },
+              }}
+            > */}
             <Text style={styles.medicineName}>{medication.name}</Text>
+            {/* </Link> */}
             <Text style={styles.dosageInfo}>{medication.dosage}</Text>
           </View>
           <View style={styles.doseTime}>
