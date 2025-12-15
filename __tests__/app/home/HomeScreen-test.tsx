@@ -21,6 +21,7 @@ jest.mock("expo-router", () => {
     },
     Link: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) => 
       asChild ? children : <TouchableOpacity>{children}</TouchableOpacity>,
+    usePathname: () => "/medications",
   };
 });
 

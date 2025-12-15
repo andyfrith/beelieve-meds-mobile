@@ -4,7 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import MedicationList from "./MedicationList";
 
-export function Medications({ headerTitle }: { headerTitle?: string }) {
+export function Medications({
+  headerTitle,
+  emptyMessageText = "No medications found",
+}: {
+  headerTitle?: string;
+  emptyMessageText?: string;
+}) {
   const { data: medications, isLoading, error } = useMedications();
 
   if (isLoading) {
@@ -30,9 +36,7 @@ export function Medications({ headerTitle }: { headerTitle?: string }) {
     return (
       <View style={styles.emptyState}>
         <Ionicons name="medical-outline" size={48} color="#ccc" />
-        <Text style={styles.emptyStateText}>
-          No medications scheduled for today
-        </Text>
+        <Text style={styles.emptyStateText}>{emptyMessageText}</Text>
       </View>
     );
   }

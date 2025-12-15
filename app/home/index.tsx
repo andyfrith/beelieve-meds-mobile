@@ -43,7 +43,10 @@ export default function HomeScreen() {
         <Header />
         <View style={styles.content}>
           <Actions />
-          <Medications headerTitle="Today's Meds" />
+          <Medications
+            headerTitle="Today's Meds"
+            emptyMessageText="No medications scheduled for today"
+          />
           <TouchableOpacity
             style={styles.cancelButton}
             onPress={() => handleClearAllData()}

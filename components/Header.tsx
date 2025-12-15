@@ -1,13 +1,21 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function Header({ title = "Beelieve" }: { title?: string }) {
+  const pathname = usePathname();
+  const handleGoBack = () => {
+    if (pathname === "/home") {
+      router.replace("/");
+    } else {
+      router.replace("/home");
+    }
+  };
   return (
     <View style={styles.header}>
       <View style={styles.headerContent}>
         <View style={styles.headerTop}>
-          <TouchableOpacity onPress={() => router.replace("/home")}>
+          <TouchableOpacity onPress={handleGoBack}>
             <View style={styles.flex1}>
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons name="bee" size={35} color="white" />

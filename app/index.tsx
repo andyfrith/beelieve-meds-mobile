@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 
@@ -24,11 +24,6 @@ export default function SplashScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-    const timeout = setTimeout(() => {
-      router.replace("/home");
-    }, 2000);
-
-    return () => clearTimeout(timeout);
   }, [fadeAnim, router, scaleAnim]);
 
   return (
@@ -40,7 +35,9 @@ export default function SplashScreen() {
         style={[{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
       >
         <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="bee" size={100} color="white" />
+          <Link href="/home">
+            <MaterialCommunityIcons name="bee" size={100} color="white" />
+          </Link>
         </View>
         <Text style={styles.appName}>Beelieve</Text>
         <Text style={styles.subtitle}>... in yourself</Text>
