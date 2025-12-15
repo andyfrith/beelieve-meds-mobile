@@ -8,6 +8,7 @@ jest.mock("expo-router", () => ({
   router: {
     replace: (path: string) => mockReplace(path),
   },
+  usePathname: () => "/medications",
 }));
 
 jest.mock("@expo/vector-icons", () => {

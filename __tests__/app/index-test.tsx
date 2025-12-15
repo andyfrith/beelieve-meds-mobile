@@ -2,11 +2,24 @@ import { act, render, screen } from "@testing-library/react-native";
 
 import SplashScreen from "@/app/index";
 
-jest.mock("expo-router", () => ({
-  useRouter: () => ({
-    replace: jest.fn(),
-  }),
-}));
+jest.mock("expo-router", () => {
+  const { View } = jest.requireActual("react-native");
+  return {
+    useRouter: () => ({
+      replace: jest.fn(),
+    }),
+    Link: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
+  };
+});
+
+jest.mock("expo-linear-gradient", () => {
+  const { View } = jest.requireActual("react-native");
+  return {
+    LinearGradient: ({ children, style }: { children: React.ReactNode; style?: object }) => (
+      <View style={style}>{children}</View>
+    ),
+  };
+});
 
 jest.mock("@expo/vector-icons", () => {
   const { View } = jest.requireActual("react-native");
