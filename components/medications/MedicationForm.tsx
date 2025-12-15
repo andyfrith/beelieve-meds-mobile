@@ -1,34 +1,47 @@
 import { DURATIONS } from "@/constants/durations";
 import { FREQUENCIES } from "@/constants/frequencies";
+import { Medication } from "@/data/medications";
 import { useAddMedication } from "@/hooks/medications/useAddMedication";
+import { useUpdateMedication } from "@/hooks/medications/useUpdateMedication";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
-    Dimensions,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { z } from "zod";
 
-export default function AddMedicationForm() {
+export default function MedicationForm({
+  medication,
+}: {
+  medication?: Medication;
+}) {
   const { mutate: addMedication } = useAddMedication({
     successRedirectPath: "/home",
   });
-
-  const [selectedFrequency, setSelectedFrequency] = useState("");
-  const [selectedDuration, setSelectedDuration] = useState("");
-
+  const { mutate: updateMedication } = useUpdateMedication({
+    successRedirectPath: "/home",
+  });
+  const [selectedFrequency, setSelectedFrequency] = useState(
+    medication?.frequency || "",
+  );
+  const [selectedDuration, setSelectedDuration] = useState(
+    medication?.duration || "",
+  );
   const medicationSchema = z.object({
+    id: z.string().optional(),
+    color: z.string().min(1, { message: "Color is required." }),
     name: z.string().min(1, { message: "Medication name is required." }),
     dosage: z.string().min(1, { message: "Dosage is required." }),
     frequency: z.string().min(1, { message: "Frequency is required." }),
@@ -38,17 +51,15 @@ export default function AddMedicationForm() {
       .array(z.string())
       .min(1, { message: "At least one time is required." }),
     notes: z.string().optional(),
-    reminderEnabled: z.boolean(),
-    refillReminder: z.boolean(),
-    // currentSupply: z
-    //   .number()
-    //   .min(1, { message: "Current supply is required." }),
-    // refillAt: z.number().min(1, { message: "Refill at is required." }),
+    reminderEnabled: z.boolean().optional(),
+    refillReminder: z.boolean().optional(),
     currentSupply: z.string().optional(),
     refillAt: z.string().optional(),
   });
 
-  type UserFormType = z.infer<typeof medicationSchema>;
+  const colors = ["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0"];
+
+  type FormValues = z.infer<typeof medicationSchema>;
 
   const {
     control,
@@ -57,24 +68,31 @@ export default function AddMedicationForm() {
     getValues,
     setValue,
     watch,
-  } = useForm<UserFormType>({
+  } = useForm<FormValues>({
     resolver: zodResolver(medicationSchema),
-    defaultValues: {
-      // name: "",
-      // dosage: "",
-      // frequency: "4",
-      // duration: "",
-      // currentSupply: 0,
-      startDate: new Date(),
-      times: ["9:00"],
-      reminderEnabled: true,
-      refillReminder: true,
-      // refillAt: 0,
-    },
+    defaultValues: medication
+      ? {
+          id: medication.id,
+          name: medication.name,
+          dosage: medication.dosage,
+          frequency: medication.frequency,
+          duration: medication.duration,
+          startDate: new Date(medication.startDate),
+          times: medication.times,
+          notes: medication.notes,
+          reminderEnabled: medication.reminderEnabled,
+          refillReminder: medication.refillReminder,
+          color: medication.color,
+        }
+      : {
+          id: Math.random().toString(36).substr(2, 9),
+          color: colors[Math.floor(Math.random() * colors.length)],
+          startDate: new Date(),
+          times: ["9:00"],
+        },
   });
 
   const watchFrequency = watch("frequency");
-  const watchedRefillReminder = watch("refillReminder");
 
   const updateTimes = (freq: string) => {
     const selectedFreq = FREQUENCIES.find((f) => f.label === freq);
@@ -82,31 +100,13 @@ export default function AddMedicationForm() {
     setValue("times", selectedFreq?.times || []);
   };
 
-  const handleSave = async () => {
-    console.log("Saving medication...");
-    const colors = ["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0"];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-    const medicationData = {
-      id: Math.random().toString(36).substr(2, 9),
-      ...getValues(),
-
-      currentSupply: getValues("currentSupply")
-        ? Number(getValues("currentSupply"))
-        : 0,
-      //   totalSupply: form.currentSupply ? Number(form.currentSupply) : 0,
-      refillAt: getValues("refillAt") ? Number(getValues("refillAt")) : 0,
-      // startDate: getValues("startDate").toString(),
-      color: randomColor,
-    };
-
-    // console.log("handleSave() medicationData", medicationData);
-    addMedication(medicationData);
-  };
-
-  const onSubmit: SubmitHandler<UserFormType> = (data: UserFormType) => {
-    handleSave();
-  };
+  async function onSubmit(data: FormValues) {
+    if (medication) {
+      updateMedication(data as Medication);
+    } else {
+      addMedication(data as Medication);
+    }
+  }
 
   function Footer() {
     return (
@@ -127,11 +127,11 @@ export default function AddMedicationForm() {
           <Text style={styles.errorText}>* Please select a duration.</Text>
         )}
         {/* {errors.currentSupply && (
-          <Text style={styles.errorText}>* Please provide current supply.</Text>
-        )}
-        {errors.refillAt && (
-          <Text style={styles.errorText}>* Please provide refill at.</Text>
-        )} */}
+        <Text style={styles.errorText}>* Please provide current supply.</Text>
+      )}
+      {errors.refillAt && (
+        <Text style={styles.errorText}>* Please provide refill at.</Text>
+      )} */}
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -389,7 +389,6 @@ export default function AddMedicationForm() {
     return (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>What times daily?</Text>
-        <Text>{getValues("times").join(", ")}</Text>
         <View style={styles.timesContainer}>
           {getValues("times").map((time: string, index: number) => (
             <TouchableOpacity
@@ -508,118 +507,6 @@ export default function AddMedicationForm() {
     );
   }
 
-//   function Refills() {
-//     return (
-//       <View style={styles.section}>
-//         <Text style={styles.sectionTitle}>Refills?</Text>
-//         <View style={styles.card}>
-//           <View style={styles.switchRow}>
-//             <View style={styles.switchLabelContainer}>
-//               <View style={styles.iconContainer}>
-//                 <Ionicons name="reload" size={20} color="#ffbf00" />
-//               </View>
-//               <View>
-//                 <Text style={styles.switchLabel}>Refill Tracking</Text>
-//                 <Text style={styles.switchSubLabel}>
-//                   Get notified when you need to refill
-//                 </Text>
-//               </View>
-//             </View>
-//             <Controller
-//               name="refillReminder"
-//               control={control}
-//               render={({
-//                 field: { onChange, onBlur, value },
-//                 fieldState: { error },
-//               }) => (
-//                 <Switch
-//                   value={value}
-//                   onValueChange={(value) => {
-//                     setValue("refillReminder", value);
-//                   }}
-//                   trackColor={{ false: "#ddd", true: "#ffbf00" }}
-//                   thumbColor="white"
-//                 />
-//               )}
-//             />
-//           </View>
-//           {watchedRefillReminder && (
-//             <View style={styles.refillInputs}>
-//               <View>
-//                 <View style={[styles.inputContainer, styles.flex1]}>
-//                   <Controller
-//                     name="currentSupply"
-//                     control={control}
-//                     render={({
-//                       field: { onChange, onBlur, value },
-//                       fieldState: { error },
-//                     }) => (
-//                       <View
-//                         style={{ flexDirection: "row", alignItems: "center" }}
-//                       >
-//                         {errors.currentSupply && (
-//                           <Ionicons
-//                             name={"medical"}
-//                             size={24}
-//                             color={"red"}
-//                             marginLeft={11}
-//                             marginRight={10}
-//                           />
-//                         )}
-//                         <TextInput
-//                           style={styles.input}
-//                           placeholder="Current Supply"
-//                           placeholderTextColor="#999"
-//                           onBlur={onBlur}
-//                           onChangeText={onChange}
-//                           value={value}
-//                           keyboardType="numeric"
-//                         />
-//                       </View>
-//                     )}
-//                   />
-//                 </View>
-//                 <View style={[styles.inputContainer, styles.flex1]}>
-//                   <Controller
-//                     name="refillAt"
-//                     control={control}
-//                     render={({
-//                       field: { onChange, onBlur, value },
-//                       fieldState: { error },
-//                     }) => (
-//                       <View
-//                         style={{ flexDirection: "row", alignItems: "center" }}
-//                       >
-//                         {errors.refillAt && (
-//                           <Ionicons
-//                             name={"medical"}
-//                             size={24}
-//                             color={"red"}
-//                             marginLeft={11}
-//                             marginRight={10}
-//                           />
-//                         )}
-//                         <TextInput
-//                           style={styles.input}
-//                           placeholder="Alert At"
-//                           placeholderTextColor="#999"
-//                           onBlur={onBlur}
-//                           onChangeText={onChange}
-//                           value={value}
-//                           keyboardType="numeric"
-//                         />
-//                       </View>
-//                     )}
-//                   />
-//                 </View>
-//               </View>
-//             </View>
-//           )}
-//         </View>
-//       </View>
-//     );
-//   }
-
   return (
     <View style={styles.content}>
       <ScrollView
@@ -635,6 +522,8 @@ export default function AddMedicationForm() {
           <Reminders />
           {/* <Refills /> */}
           <Notes />
+          {/* <Text>MedicationForm: {JSON.stringify(medication, null, 2)}</Text>
+          <Text>Errors: {JSON.stringify(errors, null, 2)}</Text> */}
         </View>
       </ScrollView>
       <Footer />

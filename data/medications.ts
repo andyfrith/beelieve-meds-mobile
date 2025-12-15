@@ -1,20 +1,27 @@
 export interface Medication {
   id: string;
-  name: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
-  times: string[];
-  startDate: Date;
-  color?: string;
-  reminderEnabled?: boolean;
+  color: string;
   currentSupply?: number | string;
-  totalSupply?: number;
+  dosage: string;
+  duration: Duration;
+  frequency: Frequency;
+  lastRefillDate?: string;
+  name: string;
+  notes?: string;
   refillAt?: number | string;
   refillReminder?: boolean;
-  notes?: string;
-  lastRefillDate?: string;
+  reminderEnabled?: boolean;
+  startDate: Date;
+  times: string[];
+  totalSupply?: number;
 }
+export type Duration = "7 days" | "14 days" | "30 days" | "90 days" | "Ongoing";
+export type Frequency =
+  | "Once daily"
+  | "Twice daily"
+  | "Three times daily"
+  | "Four times daily"
+  | "As needed";
 
 export const medications: Medication[] = [
   {
@@ -22,8 +29,8 @@ export const medications: Medication[] = [
     color: "#4CAF50",
     name: "Medication 1",
     dosage: "10mg",
-    frequency: "daily",
-    duration: "10 days",
+    frequency: "Once daily",
+    duration: "7 days",
     times: ["9:00"],
     startDate: new Date(),
   },
@@ -32,8 +39,8 @@ export const medications: Medication[] = [
     color: "#2196F3",
     name: "Medication 2",
     dosage: "20mg",
-    frequency: "daily",
-    duration: "10 days",
+    frequency: "Twice daily",
+    duration: "14 days",
     times: ["10:00"],
     startDate: new Date(),
   },

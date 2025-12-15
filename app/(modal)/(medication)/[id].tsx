@@ -12,6 +12,7 @@ export default function MedicationItemDetailsScreen({
 }) {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: medication, isLoading, error } = useMedication(id);
+
   if (isLoading) {
     return (
       <View style={styles.container}>
