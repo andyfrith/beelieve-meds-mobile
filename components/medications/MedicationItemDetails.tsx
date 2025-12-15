@@ -1,13 +1,21 @@
 import { Colors } from "@/constants/theme";
 import { Medication } from "@/data/medications";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function MedicationItemDetails({
   medication,
 }: {
   medication: Medication;
 }) {
+  const router = useRouter();
+  const handleEditMedication = () => {
+    router.replace({
+      pathname: "/medications/add",
+      params: { id: medication.id },
+    });
+  };
   return (
     <View style={styles.content}>
       <View key={medication.id} style={styles.medicationCard}>
@@ -17,18 +25,13 @@ export default function MedicationItemDetails({
             { backgroundColor: `${medication.color}15` },
           ]}
         >
-          <Ionicons name="medical" size={24} color={medication.color} />
+          <TouchableOpacity onPress={handleEditMedication}>
+            <Ionicons name="medical" size={24} color={medication.color} />
+          </TouchableOpacity>
         </View>
         <View style={styles.doseInfo}>
           <View>
-            {/* <Link
-              href={{
-                pathname: "/medications/add",
-                params: { id: medication.id },
-              }}
-            > */}
             <Text style={styles.medicineName}>{medication.name}</Text>
-            {/* </Link> */}
             <Text style={styles.dosageInfo}>{medication.dosage}</Text>
           </View>
           <View style={styles.doseTime}>

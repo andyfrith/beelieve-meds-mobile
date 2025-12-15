@@ -12,7 +12,7 @@ export const useUpdateMedication = ({
   const mutation = useMutation({
     mutationFn: medicationService.update,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["medications"] });
+      await queryClient.invalidateQueries();
       Alert.alert("Success", "Medication updated successfully");
       if (successRedirectPath) {
         router.navigate(successRedirectPath as RelativePathString);

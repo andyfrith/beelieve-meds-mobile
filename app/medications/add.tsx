@@ -1,15 +1,39 @@
 import { Header } from "@/components/Header";
 import MedicationForm from "@/components/medications/MedicationForm";
 import { Colors } from "@/constants/theme";
+import { useMedication } from "@/hooks/medications/useMedications";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function AddMedicationScreen() {
-  // const { id } = useLocalSearchParams<{ id: string }>();
-  // if (id) {
-  //   console.log("id", id);
-  // }
-  // const { data: medication, isLoading, error } = useMedication(id);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: medication, isLoading, error } = useMedication(id);
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator size={"large"} color={"white"} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorState}>
+        <Text style={styles.errorStateText}>Failed to load medications</Text>
+        <Text style={{ color: Colors.muted }}>
+          {error instanceof Error ? error.message : "Please try again later"}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <LinearGradient
@@ -19,7 +43,7 @@ export default function AddMedicationScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Header />
         <View style={styles.content}>
-          <MedicationForm />
+          <MedicationForm medication={medication} />
         </View>
       </ScrollView>
     </LinearGradient>
@@ -36,5 +60,17 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+  },
+  errorState: {
+    alignItems: "center",
+    padding: 30,
+    backgroundColor: "white",
+    borderRadius: 16,
+    marginTop: 10,
+  },
+  errorStateText: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 10,
   },
 });
