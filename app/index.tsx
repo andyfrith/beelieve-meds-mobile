@@ -3,7 +3,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function SplashScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -41,6 +47,20 @@ export default function SplashScreen() {
         </View>
         <Text style={styles.appName}>Beelieve</Text>
         <Text style={styles.subtitle}>... in yourself</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/home")}
+          >
+            <Text style={styles.buttonText}>Medications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/pharmacies")}
+          >
+            <Text style={styles.buttonText}>Pharmacies</Text>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
     </LinearGradient>
   );
@@ -77,6 +97,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "rgba(255, 255, 255, 0.9)",
     marginBottom: 40,
+    textAlign: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 16,
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.4)",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
     textAlign: "center",
   },
 });
