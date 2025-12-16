@@ -111,7 +111,9 @@ export default function PharmacyForm({ pharmacy }: { pharmacy?: Pharmacy }) {
     return (
       <View style={styles.footer}>
         {errors.name && (
-          <Text style={styles.errorText}>* Please provide a pharmacy name.</Text>
+          <Text style={styles.errorText}>
+            * Please provide a pharmacy name.
+          </Text>
         )}
         {errors.phone && (
           <Text style={styles.errorText}>* Please provide a phone number.</Text>
@@ -564,4 +566,3 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
-
