@@ -60,6 +60,12 @@ export default function SplashScreen() {
           >
             <Text style={styles.buttonText}>Pharmacies</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/providers")}
+          >
+            <Text style={styles.buttonText}>Providers</Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     </LinearGradient>
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 16,
     marginTop: 20,
   },
