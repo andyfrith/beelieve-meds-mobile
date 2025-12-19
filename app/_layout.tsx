@@ -21,6 +21,18 @@ export default function RootLayout() {
             presentation: "modal",
           }}
         />
+        <Stack.Screen
+          name="(modal)/(pharmacy)/[id]"
+          options={{
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="(modal)/(provider)/[id]"
+          options={{
+            presentation: "modal",
+          }}
+        />
       </Stack>
     </QueryClientProvider>
   );
