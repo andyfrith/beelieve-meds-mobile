@@ -23,7 +23,7 @@ export default function ProviderItemDetails({
           style={[styles.providerBadge, { backgroundColor: `${"#000"}15` }]}
         >
           <TouchableOpacity onPress={handleEditMedication}>
-            <Ionicons name="storefront" size={24} color={Colors.honey.color4} />
+            <Ionicons name="storefront" size={24} color={Colors.provider} />
           </TouchableOpacity>
         </View>
         <View style={styles.providerInfo}>

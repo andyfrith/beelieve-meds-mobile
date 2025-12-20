@@ -16,7 +16,7 @@ const ProviderList = ({ providers }: { providers: Provider[] }) => {
         <Link href={`/(modal)/(provider)/${provider.id}`} style={styles.link}>
           <View key={provider.id} style={styles.providerCard}>
             <View style={styles.providerBadge}>
-              <Ionicons name="person" size={24} color={Colors.honey.color4} />
+              <Ionicons name="person" size={24} color={Colors.provider} />
             </View>
             <View style={styles.providerInfo}>
               <View>

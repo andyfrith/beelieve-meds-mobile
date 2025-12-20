@@ -5,11 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export function Header({ title = "Beelieve" }: { title?: string }) {
   const pathname = usePathname();
   const handleGoBack = () => {
-    if (pathname === "/home") {
-      router.replace("/");
-    } else {
-      router.replace("/home");
-    }
+    router.back();
   };
   return (
     <View style={styles.header}>
@@ -20,7 +16,9 @@ export function Header({ title = "Beelieve" }: { title?: string }) {
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons name="bee" size={35} color="white" />
               </View>
-              <Text style={styles.greeting}>{title}</Text>
+              <Text style={styles.greeting}>
+                {title}-{pathname}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

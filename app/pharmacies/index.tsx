@@ -1,16 +1,9 @@
+import { Actions } from "@/components/actions/Actions";
 import { Header } from "@/components/Header";
 import { Pharmacies } from "@/components/pharmacies/Pharmacies";
 import { Colors } from "@/constants/theme";
-import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function PharmaciesScreen() {
   return (
@@ -21,14 +14,8 @@ export default function PharmaciesScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Header />
         <View style={styles.content}>
-          <Pharmacies headerTitle="All Pharmacies" />
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push("/pharmacies/add")}
-          >
-            <Ionicons name="add-circle" size={24} color="white" />
-            <Text style={styles.addButtonText}>Add Pharmacy</Text>
-          </TouchableOpacity>
+          <Actions module="pharmacies" />
+          <Pharmacies headerTitle="Active" />
         </View>
       </ScrollView>
     </LinearGradient>

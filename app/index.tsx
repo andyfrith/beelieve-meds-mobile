@@ -50,7 +50,7 @@ export default function SplashScreen() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/home")}
+            onPress={() => router.push("/medications")}
           >
             <Text style={styles.buttonText}>Medications</Text>
           </TouchableOpacity>

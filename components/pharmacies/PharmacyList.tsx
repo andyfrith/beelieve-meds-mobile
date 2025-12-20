@@ -16,11 +16,7 @@ const PharmacyList = ({ pharmacies }: { pharmacies: Pharmacy[] }) => {
         <Link href={`/(modal)/(pharmacy)/${pharmacy.id}`} style={styles.link}>
           <View key={pharmacy.id} style={styles.pharmacyCard}>
             <View style={styles.pharmacyBadge}>
-              <Ionicons
-                name="storefront"
-                size={24}
-                color={Colors.honey.color4}
-              />
+              <Ionicons name="storefront" size={24} color={Colors.pharmacy} />
             </View>
             <View style={styles.pharmacyInfo}>
               <View>
