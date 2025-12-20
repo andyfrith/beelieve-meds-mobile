@@ -1,5 +1,7 @@
 import { Colors } from "@/constants/theme";
 import { Medication } from "@/data/medications";
+import { usePharmacy } from "@/hooks/pharmacies/usePharmacies";
+import { useProvider } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -10,6 +12,9 @@ export default function MedicationItemDetails({
   medication: Medication;
 }) {
   const router = useRouter();
+  const { data: pharmacy } = usePharmacy(medication.pharmacyId || "");
+  const { data: provider } = useProvider(medication.providerId || "");
+
   const handleEditMedication = () => {
     router.replace({
       pathname: "/medications/add",
@@ -38,6 +43,18 @@ export default function MedicationItemDetails({
             <Ionicons name="time-outline" size={16} color="#666" />
             <Text style={styles.timeText}>{medication.times.join(" : ")}</Text>
           </View>
+          {pharmacy && (
+            <View style={styles.associationRow}>
+              <Ionicons name="business-outline" size={14} color="#666" />
+              <Text style={styles.associationText}>{pharmacy.name}</Text>
+            </View>
+          )}
+          {provider && (
+            <View style={styles.associationRow}>
+              <Ionicons name="person-outline" size={14} color="#666" />
+              <Text style={styles.associationText}>{provider.name}</Text>
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -134,5 +151,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: "#666",
     fontSize: 14,
+  },
+  associationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  associationText: {
+    marginLeft: 6,
+    color: "#666",
+    fontSize: 13,
   },
 });

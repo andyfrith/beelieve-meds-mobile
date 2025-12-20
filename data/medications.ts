@@ -8,6 +8,8 @@ export interface Medication {
   lastRefillDate?: string;
   name: string;
   notes?: string;
+  pharmacyId?: string;
+  providerId?: string;
   refillAt?: number | string;
   refillReminder?: boolean;
   reminderEnabled?: boolean;

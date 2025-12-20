@@ -3,6 +3,8 @@ import { FREQUENCIES } from "@/constants/frequencies";
 import { Medication } from "@/data/medications";
 import { useAddMedication } from "@/hooks/medications/useAddMedication";
 import { useUpdateMedication } from "@/hooks/medications/useUpdateMedication";
+import { usePharmacies } from "@/hooks/pharmacies/usePharmacies";
+import { useProviders } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -11,6 +13,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ActivityIndicator,
   Dimensions,
   ScrollView,
   StyleSheet,
@@ -33,11 +36,19 @@ export default function MedicationForm({
   const { mutate: updateMedication } = useUpdateMedication({
     successRedirectPath: "/home",
   });
+  const { data: pharmacies, isLoading: isLoadingPharmacies } = usePharmacies();
+  const { data: providers, isLoading: isLoadingProviders } = useProviders();
   const [selectedFrequency, setSelectedFrequency] = useState(
     medication?.frequency || "",
   );
   const [selectedDuration, setSelectedDuration] = useState(
     medication?.duration || "",
+  );
+  const [selectedPharmacyId, setSelectedPharmacyId] = useState(
+    medication?.pharmacyId || "",
+  );
+  const [selectedProviderId, setSelectedProviderId] = useState(
+    medication?.providerId || "",
   );
   const medicationSchema = z.object({
     id: z.string().optional(),
@@ -46,6 +57,8 @@ export default function MedicationForm({
     dosage: z.string().min(1, { message: "Dosage is required." }),
     frequency: z.string().min(1, { message: "Frequency is required." }),
     duration: z.string().min(1, { message: "Duration is required." }),
+    pharmacyId: z.string().min(1, { message: "Pharmacy is required." }),
+    providerId: z.string().min(1, { message: "Provider is required." }),
     startDate: z.date().min(1, { message: "Start date is required." }),
     times: z
       .array(z.string())
@@ -77,6 +90,8 @@ export default function MedicationForm({
           dosage: medication.dosage,
           frequency: medication.frequency,
           duration: medication.duration,
+          pharmacyId: medication.pharmacyId,
+          providerId: medication.providerId,
           startDate: new Date(medication.startDate),
           times: medication.times,
           notes: medication.notes,
@@ -87,6 +102,8 @@ export default function MedicationForm({
       : {
           id: Math.random().toString(36).substr(2, 9),
           color: colors[Math.floor(Math.random() * colors.length)],
+          pharmacyId: "",
+          providerId: "",
           startDate: new Date(),
           times: ["9:00"],
         },
@@ -125,6 +142,12 @@ export default function MedicationForm({
         )}
         {errors.duration && (
           <Text style={styles.errorText}>* Please select a duration.</Text>
+        )}
+        {errors.pharmacyId && (
+          <Text style={styles.errorText}>* Please select a pharmacy.</Text>
+        )}
+        {errors.providerId && (
+          <Text style={styles.errorText}>* Please select a provider.</Text>
         )}
         {/* {errors.currentSupply && (
         <Text style={styles.errorText}>* Please provide current supply.</Text>
@@ -507,6 +530,226 @@ export default function MedicationForm({
     );
   }
 
+  function PharmacySelection() {
+    if (isLoadingPharmacies) {
+      return (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Which pharmacy?</Text>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#ffbf00" />
+            <Text style={styles.loadingText}>Loading pharmacies...</Text>
+          </View>
+        </View>
+      );
+    }
+
+    if (!pharmacies || pharmacies.length === 0) {
+      return (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Which pharmacy?</Text>
+          <View style={styles.emptyContainer}>
+            <Ionicons name="business-outline" size={24} color="#999" />
+            <Text style={styles.emptyText}>No pharmacies available</Text>
+            <TouchableOpacity
+              style={styles.addNewButton}
+              onPress={() => router.push("/pharmacies/add")}
+            >
+              <Text style={styles.addNewButtonText}>Add a pharmacy</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.section}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {errors.pharmacyId && (
+            <Ionicons
+              name={"medical"}
+              size={24}
+              color={"red"}
+              marginLeft={11}
+              marginRight={10}
+            />
+          )}
+          <Text style={styles.sectionTitle}>Which pharmacy?</Text>
+        </View>
+        <Controller
+          control={control}
+          name="pharmacyId"
+          render={({ field: { onChange } }) => (
+            <View style={styles.selectionList}>
+              {pharmacies.map((pharmacy) => (
+                <TouchableOpacity
+                  key={pharmacy.id}
+                  style={[
+                    styles.selectionCard,
+                    selectedPharmacyId === pharmacy.id &&
+                      styles.selectedSelectionCard,
+                  ]}
+                  onPress={() => {
+                    setSelectedPharmacyId(pharmacy.id);
+                    onChange(pharmacy.id);
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.selectionIcon,
+                      selectedPharmacyId === pharmacy.id &&
+                        styles.selectedSelectionIcon,
+                    ]}
+                  >
+                    <Ionicons
+                      name="business"
+                      size={20}
+                      color={
+                        selectedPharmacyId === pharmacy.id ? "white" : "#ffbf00"
+                      }
+                    />
+                  </View>
+                  <View style={styles.selectionInfo}>
+                    <Text
+                      style={[
+                        styles.selectionName,
+                        selectedPharmacyId === pharmacy.id &&
+                          styles.selectedSelectionText,
+                      ]}
+                    >
+                      {pharmacy.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.selectionDetail,
+                        selectedPharmacyId === pharmacy.id &&
+                          styles.selectedSelectionDetailText,
+                      ]}
+                    >
+                      {pharmacy.phone}
+                    </Text>
+                  </View>
+                  {selectedPharmacyId === pharmacy.id && (
+                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        />
+      </View>
+    );
+  }
+
+  function ProviderSelection() {
+    if (isLoadingProviders) {
+      return (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Which provider?</Text>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#ffbf00" />
+            <Text style={styles.loadingText}>Loading providers...</Text>
+          </View>
+        </View>
+      );
+    }
+
+    if (!providers || providers.length === 0) {
+      return (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Which provider?</Text>
+          <View style={styles.emptyContainer}>
+            <Ionicons name="person-outline" size={24} color="#999" />
+            <Text style={styles.emptyText}>No providers available</Text>
+            <TouchableOpacity
+              style={styles.addNewButton}
+              onPress={() => router.push("/providers/add")}
+            >
+              <Text style={styles.addNewButtonText}>Add a provider</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.section}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {errors.providerId && (
+            <Ionicons
+              name={"medical"}
+              size={24}
+              color={"red"}
+              marginLeft={11}
+              marginRight={10}
+            />
+          )}
+          <Text style={styles.sectionTitle}>Which provider?</Text>
+        </View>
+        <Controller
+          control={control}
+          name="providerId"
+          render={({ field: { onChange } }) => (
+            <View style={styles.selectionList}>
+              {providers.map((provider) => (
+                <TouchableOpacity
+                  key={provider.id}
+                  style={[
+                    styles.selectionCard,
+                    selectedProviderId === provider.id &&
+                      styles.selectedSelectionCard,
+                  ]}
+                  onPress={() => {
+                    setSelectedProviderId(provider.id);
+                    onChange(provider.id);
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.selectionIcon,
+                      selectedProviderId === provider.id &&
+                        styles.selectedSelectionIcon,
+                    ]}
+                  >
+                    <Ionicons
+                      name="person"
+                      size={20}
+                      color={
+                        selectedProviderId === provider.id ? "white" : "#ffbf00"
+                      }
+                    />
+                  </View>
+                  <View style={styles.selectionInfo}>
+                    <Text
+                      style={[
+                        styles.selectionName,
+                        selectedProviderId === provider.id &&
+                          styles.selectedSelectionText,
+                      ]}
+                    >
+                      {provider.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.selectionDetail,
+                        selectedProviderId === provider.id &&
+                          styles.selectedSelectionDetailText,
+                      ]}
+                    >
+                      {provider.phone}
+                    </Text>
+                  </View>
+                  {selectedProviderId === provider.id && (
+                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.content}>
       <ScrollView
@@ -519,6 +762,8 @@ export default function MedicationForm({
           <Duration />
           <DatePicker />
           {watchFrequency && watchFrequency !== "As needed" && <TimePicker />}
+          <PharmacySelection />
+          <ProviderSelection />
           <Reminders />
           {/* <Refills /> */}
           <Notes />
@@ -811,5 +1056,96 @@ export const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     color: "#333",
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  loadingText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: "#666",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  emptyText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: "#666",
+  },
+  addNewButton: {
+    marginTop: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#ffbf00",
+    borderRadius: 12,
+  },
+  addNewButtonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  selectionList: {
+    gap: 10,
+  },
+  selectionCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  selectedSelectionCard: {
+    backgroundColor: "#ffbf00",
+    borderColor: "#ffbf00",
+  },
+  selectionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  selectedSelectionIcon: {
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  selectionInfo: {
+    flex: 1,
+  },
+  selectionName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 2,
+  },
+  selectionDetail: {
+    fontSize: 13,
+    color: "#666",
+  },
+  selectedSelectionText: {
+    color: "white",
+  },
+  selectedSelectionDetailText: {
+    color: "rgba(255, 255, 255, 0.8)",
   },
 });
