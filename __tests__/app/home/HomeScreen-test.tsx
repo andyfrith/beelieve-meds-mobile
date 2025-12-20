@@ -11,17 +11,16 @@ import React from "react";
 
 import HomeScreen from "@/app/home/index";
 
-const mockReplace = jest.fn();
+const mockBack = jest.fn();
 
 jest.mock("expo-router", () => {
   const { TouchableOpacity } = jest.requireActual("react-native");
   return {
     router: {
-      replace: (path: string) => mockReplace(path),
+      back: () => mockBack(),
     },
     Link: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) => 
       asChild ? children : <TouchableOpacity>{children}</TouchableOpacity>,
-    usePathname: () => "/medications",
   };
 });
 
@@ -149,11 +148,11 @@ describe("<HomeScreen />", () => {
       expect(beeIcon).toBeOnTheScreen();
     });
 
-    test("Header navigates to home when pressed", () => {
+    test("Header navigates back when pressed", () => {
       render(<HomeScreen />, { wrapper: createWrapper() });
       const headerTitle = screen.getByText("Beelieve");
       fireEvent.press(headerTitle);
-      expect(mockReplace).toHaveBeenCalledWith("/home");
+      expect(mockBack).toHaveBeenCalled();
     });
   });
 

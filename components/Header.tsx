@@ -1,9 +1,12 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router, usePathname } from "expo-router";
+import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+/**
+ * Header component that displays a title and bee icon.
+ * @param title - The title to display, defaults to "Beelieve"
+ */
 export function Header({ title = "Beelieve" }: { title?: string }) {
-  const pathname = usePathname();
   const handleGoBack = () => {
     router.back();
   };
@@ -16,9 +19,7 @@ export function Header({ title = "Beelieve" }: { title?: string }) {
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons name="bee" size={35} color="white" />
               </View>
-              <Text style={styles.greeting}>
-                {title}-{pathname}
-              </Text>
+              <Text style={styles.greeting}>{title}</Text>
             </View>
           </TouchableOpacity>
         </View>
