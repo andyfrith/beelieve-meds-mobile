@@ -2,13 +2,12 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { Header } from "@/components/Header";
 
-const mockReplace = jest.fn();
+const mockBack = jest.fn();
 
 jest.mock("expo-router", () => ({
   router: {
-    replace: (path: string) => mockReplace(path),
+    back: () => mockBack(),
   },
-  usePathname: () => "/medications",
 }));
 
 jest.mock("@expo/vector-icons", () => {
@@ -47,17 +46,17 @@ describe("<Header />", () => {
     expect(iconElement).toBeOnTheScreen();
   });
 
-  test("navigates to home when header is pressed", () => {
+  test("navigates back when header is pressed", () => {
     render(<Header />);
     const titleElement = screen.getByText("Beelieve");
     fireEvent.press(titleElement);
-    expect(mockReplace).toHaveBeenCalledWith("/home");
+    expect(mockBack).toHaveBeenCalled();
   });
 
-  test("navigates to home when custom title is pressed", () => {
+  test("navigates back when custom title is pressed", () => {
     render(<Header title="My App" />);
     const titleElement = screen.getByText("My App");
     fireEvent.press(titleElement);
-    expect(mockReplace).toHaveBeenCalledWith("/home");
+    expect(mockBack).toHaveBeenCalled();
   });
 });

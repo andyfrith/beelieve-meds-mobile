@@ -10,8 +10,14 @@ import {
   View,
 } from "react-native";
 
-export function Actions() {
-  const { data: actions } = useActions();
+export function Actions({
+  title = "Actions",
+  module,
+}: {
+  title?: string;
+  module?: string;
+}) {
+  const { data: actions } = useActions(module);
 
   if (!actions) {
     return null;
@@ -19,7 +25,7 @@ export function Actions() {
 
   return (
     <View style={styles.actionsContainer}>
-      <Text style={styles.sectionTitle}>Actions</Text>
+      <Text style={styles.sectionTitle}>{title}</Text>
       <View style={styles.actionsGrid}>
         {actions.map((action) => (
           <Link href={action.route as any} key={action.label} asChild>

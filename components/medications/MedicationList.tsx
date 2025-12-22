@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import MedicationBadge from "./MedicationBadge";
 
 const MedicationList = ({ medications }: { medications: Medication[] }) => {
   return (
@@ -15,14 +16,7 @@ const MedicationList = ({ medications }: { medications: Medication[] }) => {
           style={styles.link}
         >
           <View key={medication.id} style={styles.medicationCard}>
-            <View
-              style={[
-                styles.medicationBadge,
-                { backgroundColor: `${medication.color}15` },
-              ]}
-            >
-              <Ionicons name="medical" size={24} color={medication.color} />
-            </View>
+            <MedicationBadge />
             <View style={styles.doseInfo}>
               <View>
                 <Text style={styles.medicineName}>{medication.name}</Text>

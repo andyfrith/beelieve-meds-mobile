@@ -1,8 +1,9 @@
+import ProviderBadge from "@/components/providers/ProviderBadge";
 import { Colors } from "@/constants/theme";
 import { Provider } from "@/data/provider";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function ProviderItemDetails({
   provider,
@@ -10,7 +11,7 @@ export default function ProviderItemDetails({
   provider: Provider;
 }) {
   const router = useRouter();
-  const handleEditMedication = () => {
+  const handleEditProvider = () => {
     router.replace({
       pathname: "/providers/add",
       params: { id: provider.id },
@@ -19,13 +20,7 @@ export default function ProviderItemDetails({
   return (
     <View style={styles.content}>
       <View key={provider.id} style={styles.providerCard}>
-        <View
-          style={[styles.providerBadge, { backgroundColor: `${"#000"}15` }]}
-        >
-          <TouchableOpacity onPress={handleEditMedication}>
-            <Ionicons name="storefront" size={24} color={Colors.honey.color4} />
-          </TouchableOpacity>
-        </View>
+        <ProviderBadge handlePress={handleEditProvider} />
         <View style={styles.providerInfo}>
           <View>
             <Text style={styles.providerName}>{provider.name}</Text>

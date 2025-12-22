@@ -1,15 +1,14 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router, usePathname } from "expo-router";
+import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+/**
+ * Header component that displays a title and bee icon.
+ * @param title - The title to display, defaults to "Beelieve"
+ */
 export function Header({ title = "Beelieve" }: { title?: string }) {
-  const pathname = usePathname();
   const handleGoBack = () => {
-    if (pathname === "/home") {
-      router.replace("/");
-    } else {
-      router.replace("/home");
-    }
+    router.back();
   };
   return (
     <View style={styles.header}>
