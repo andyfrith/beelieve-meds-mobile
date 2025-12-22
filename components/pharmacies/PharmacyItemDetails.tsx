@@ -1,8 +1,9 @@
+import PharmacyBadge from "@/components/pharmacies/PharmacyBadge";
 import { Colors } from "@/constants/theme";
 import { Pharmacy } from "@/data/pharmacy";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function PharmacyItemDetails({
   pharmacy,
@@ -19,13 +20,7 @@ export default function PharmacyItemDetails({
   return (
     <View style={styles.content}>
       <View key={pharmacy.id} style={styles.pharmacyCard}>
-        <View
-          style={[styles.pharmacyBadge, { backgroundColor: `${"#000"}15` }]}
-        >
-          <TouchableOpacity onPress={handleEditMedication}>
-            <Ionicons name="storefront" size={24} color={Colors.pharmacy} />
-          </TouchableOpacity>
-        </View>
+        <PharmacyBadge handlePress={handleEditMedication} />
         <View style={styles.pharmacyInfo}>
           <View>
             <Text style={styles.pharmacyName}>{pharmacy.name}</Text>

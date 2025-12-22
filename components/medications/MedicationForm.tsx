@@ -17,7 +17,6 @@ import {
   Dimensions,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -463,43 +462,43 @@ export default function MedicationForm({
     );
   }
 
-  function Reminders() {
-    return (
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Remind me?</Text>
-        <View style={styles.card}>
-          <View style={styles.switchRow}>
-            <View style={styles.switchLabelContainer}>
-              <View style={styles.iconContainer}>
-                <Ionicons name="notifications" size={20} color="#ffbf00" />
-              </View>
-              <View>
-                <Text style={styles.switchLabel}>Reminders</Text>
-                <Text style={styles.switchSubLabel}>
-                  Get notified when it&apos;s time to take your medication
-                </Text>
-              </View>
-            </View>
-            <Controller
-              control={control}
-              render={({
-                field: { onChange, onBlur, value },
-                fieldState: { error },
-              }) => (
-                <Switch
-                  value={value}
-                  onValueChange={(value) => setValue("reminderEnabled", value)}
-                  trackColor={{ false: "#ddd", true: "#ffbf00" }}
-                  thumbColor="white"
-                />
-              )}
-              name="reminderEnabled"
-            />
-          </View>
-        </View>
-      </View>
-    );
-  }
+  // function Reminders() {
+  //   return (
+  //     <View style={styles.section}>
+  //       <Text style={styles.sectionTitle}>Remind me?</Text>
+  //       <View style={styles.card}>
+  //         <View style={styles.switchRow}>
+  //           <View style={styles.switchLabelContainer}>
+  //             <View style={styles.iconContainer}>
+  //               <Ionicons name="notifications" size={20} color="#ffbf00" />
+  //             </View>
+  //             <View>
+  //               <Text style={styles.switchLabel}>Reminders</Text>
+  //               <Text style={styles.switchSubLabel}>
+  //                 Get notified when it&apos;s time to take your medication
+  //               </Text>
+  //             </View>
+  //           </View>
+  //           <Controller
+  //             control={control}
+  //             render={({
+  //               field: { onChange, onBlur, value },
+  //               fieldState: { error },
+  //             }) => (
+  //               <Switch
+  //                 value={value}
+  //                 onValueChange={(value) => setValue("reminderEnabled", value)}
+  //                 trackColor={{ false: "#ddd", true: "#ffbf00" }}
+  //                 thumbColor="white"
+  //               />
+  //             )}
+  //             name="reminderEnabled"
+  //           />
+  //         </View>
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
   function Notes() {
     return (
@@ -764,7 +763,7 @@ export default function MedicationForm({
           {watchFrequency && watchFrequency !== "As needed" && <TimePicker />}
           <PharmacySelection />
           <ProviderSelection />
-          <Reminders />
+          {/* <Reminders /> */}
           {/* <Refills /> */}
           <Notes />
           {/* <Text>MedicationForm: {JSON.stringify(medication, null, 2)}</Text>

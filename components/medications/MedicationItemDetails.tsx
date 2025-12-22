@@ -4,7 +4,8 @@ import { usePharmacy } from "@/hooks/pharmacies/usePharmacies";
 import { useProvider } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import MedicationBadge from "./MedicationBadge";
 
 export default function MedicationItemDetails({
   medication,
@@ -24,16 +25,7 @@ export default function MedicationItemDetails({
   return (
     <View style={styles.content}>
       <View key={medication.id} style={styles.medicationCard}>
-        <View
-          style={[
-            styles.medicationBadge,
-            { backgroundColor: `${medication.color}15` },
-          ]}
-        >
-          <TouchableOpacity onPress={handleEditMedication}>
-            <Ionicons name="medical" size={24} color={medication.color} />
-          </TouchableOpacity>
-        </View>
+        <MedicationBadge handlePress={handleEditMedication} />
         <View style={styles.doseInfo}>
           <View>
             <Text style={styles.medicineName}>{medication.name}</Text>
@@ -45,7 +37,7 @@ export default function MedicationItemDetails({
           </View>
           {pharmacy && (
             <View style={styles.associationRow}>
-              <Ionicons name="business-outline" size={14} color="#666" />
+              <Ionicons name="medkit-outline" size={14} color="#666" />
               <Text style={styles.associationText}>{pharmacy.name}</Text>
             </View>
           )}
@@ -119,14 +111,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 3,
-  },
-  medicationBadge: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 15,
   },
   medicineName: {
     fontSize: 16,

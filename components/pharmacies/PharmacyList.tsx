@@ -1,3 +1,4 @@
+import PharmacyBadge from "@/components/pharmacies/PharmacyBadge";
 import { Colors } from "@/constants/theme";
 import { Pharmacy } from "@/data/pharmacy";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,9 +16,7 @@ const PharmacyList = ({ pharmacies }: { pharmacies: Pharmacy[] }) => {
       renderItem={({ item: pharmacy }) => (
         <Link href={`/(modal)/(pharmacy)/${pharmacy.id}`} style={styles.link}>
           <View key={pharmacy.id} style={styles.pharmacyCard}>
-            <View style={styles.pharmacyBadge}>
-              <Ionicons name="storefront" size={24} color={Colors.pharmacy} />
-            </View>
+            <PharmacyBadge />
             <View style={styles.pharmacyInfo}>
               <View>
                 <Text style={styles.pharmacyName}>{pharmacy.name}</Text>

@@ -1,8 +1,8 @@
+import ProviderList from "@/components/providers/ProviderList";
 import { Colors } from "@/constants/theme";
 import { useProviders } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import ProviderList from "./ProviderList";
 
 /**
  * Component for displaying a list of providers with loading and error states

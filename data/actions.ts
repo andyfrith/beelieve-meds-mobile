@@ -31,7 +31,7 @@ export const actions: Action[] = [
     gradient: ["darkgreen", "darkolivegreen"] as [string, string],
   },
   {
-    icon: "storefront" as const,
+    icon: "medkit-outline" as const,
     label: "Pharmacies",
     route: "/pharmacies/all" as const,
     color: Colors.pharmacy,
@@ -45,7 +45,7 @@ export const actions: Action[] = [
     gradient: ["darkgreen", "darkolivegreen"] as [string, string],
   },
   {
-    icon: "people" as const,
+    icon: "people-outline" as const,
     label: "Providers",
     route: "/providers/all" as const,
     color: Colors.provider,

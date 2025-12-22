@@ -1,3 +1,4 @@
+import ProviderBadge from "@/components/providers/ProviderBadge";
 import { Colors } from "@/constants/theme";
 import { Provider } from "@/data/provider";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,9 +16,7 @@ const ProviderList = ({ providers }: { providers: Provider[] }) => {
       renderItem={({ item: provider }) => (
         <Link href={`/(modal)/(provider)/${provider.id}`} style={styles.link}>
           <View key={provider.id} style={styles.providerCard}>
-            <View style={styles.providerBadge}>
-              <Ionicons name="person" size={24} color={Colors.provider} />
-            </View>
+            <ProviderBadge />
             <View style={styles.providerInfo}>
               <View>
                 <Text style={styles.providerName}>{provider.name}</Text>
@@ -40,16 +39,6 @@ const ProviderList = ({ providers }: { providers: Provider[] }) => {
 };
 
 const styles = StyleSheet.create({
-  card: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#000",
-    overflow: "hidden",
-    boxShadow: "0px 4px 2px -2px rgba(0,0,0, 0.2)",
-    elevation: 2,
-  },
   image: {
     width: "100%",
     height: 180,

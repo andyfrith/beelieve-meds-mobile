@@ -16,7 +16,7 @@ export default function ProviderItemDetailsScreen({
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size={"large"} color={Colors.honey.color1} />
+        <ActivityIndicator size={"large"} color={Colors.provider} />
       </View>
     );
   }
