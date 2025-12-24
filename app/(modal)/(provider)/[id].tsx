@@ -1,9 +1,10 @@
 import ProviderItemDetails from "@/components/providers/ProviderItemDetails";
 import { Colors } from "@/constants/theme";
+import { useDeleteProvider } from "@/hooks/providers/useDeleteProvider";
 import { useProvider } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
 export default function ProviderItemDetailsScreen({
   headerTitle,
@@ -12,6 +13,29 @@ export default function ProviderItemDetailsScreen({
 }) {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: provider, isLoading, error } = useProvider(id);
+  const { mutate: deleteProvider } = useDeleteProvider({
+    successRedirectPath: "/providers",
+  });
+  const handleDeleteProvider = () => {
+    Alert.alert(
+      "Delete Provider",
+      "Are you sure you want to delete provider data? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes, Delete Provider",
+          style: "destructive",
+          onPress: async () => {
+            router.back();
+            deleteProvider(id);
+          },
+        },
+      ],
+    );
+  };
 
   if (isLoading) {
     return (
@@ -44,7 +68,10 @@ export default function ProviderItemDetailsScreen({
           <Text style={styles.sectionTitle}>{headerTitle}</Text>
         </View>
       )}
-      <ProviderItemDetails provider={provider} />
+      <ProviderItemDetails
+        provider={provider}
+        handleDeleteProvider={handleDeleteProvider}
+      />
     </View>
   );
 }

@@ -1,9 +1,10 @@
 import PharmacyItemDetails from "@/components/pharmacies/PharmacyItemDetails";
 import { Colors } from "@/constants/theme";
+import { useDeletePharmacy } from "@/hooks/pharmacies/useDeletePharmacy";
 import { usePharmacy } from "@/hooks/pharmacies/usePharmacies";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
 export default function PharmacyItemDetailsScreen({
   headerTitle,
@@ -12,6 +13,29 @@ export default function PharmacyItemDetailsScreen({
 }) {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: pharmacy, isLoading, error } = usePharmacy(id);
+  const { mutate: deletePharmacy } = useDeletePharmacy({
+    successRedirectPath: "/pharmacies",
+  });
+  const handleDeletePharmacy = () => {
+    Alert.alert(
+      "Delete Pharmacy",
+      "Are you sure you want to delete all pharmacy data? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes, Delete Pharmacy",
+          style: "destructive",
+          onPress: async () => {
+            router.back();
+            deletePharmacy(id);
+          },
+        },
+      ],
+    );
+  };
 
   if (isLoading) {
     return (
@@ -37,6 +61,7 @@ export default function PharmacyItemDetailsScreen({
       </View>
     );
   }
+
   return (
     <View style={styles.section}>
       {headerTitle && (
@@ -44,7 +69,10 @@ export default function PharmacyItemDetailsScreen({
           <Text style={styles.sectionTitle}>{headerTitle}</Text>
         </View>
       )}
-      <PharmacyItemDetails pharmacy={pharmacy} />
+      <PharmacyItemDetails
+        pharmacy={pharmacy}
+        handleDeletePharmacy={handleDeletePharmacy}
+      />
     </View>
   );
 }
