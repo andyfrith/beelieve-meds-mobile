@@ -38,7 +38,14 @@ export default function SplashScreen() {
       style={styles.container}
     >
       <Animated.View
-        style={[{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
+        style={[
+          {
+            justifyContent: "center",
+            alignItems: "center",
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
       >
         <View style={styles.iconContainer}>
           <Link href="/home">
