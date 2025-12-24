@@ -1,10 +1,12 @@
 import { Header } from "@/components/Header";
 import { Pharmacies } from "@/components/pharmacies/Pharmacies";
 import { Colors } from "@/constants/theme";
+import { useClearAllPharmacies } from "@/hooks/pharmacies/useClearAllPharmacies";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +15,26 @@ import {
 } from "react-native";
 
 export default function AllPharmaciesScreen() {
+  const { mutate: clearAllPharmacies } = useClearAllPharmacies();
+  const handleClearAllMedications = () => {
+    Alert.alert(
+      "Clear All Data",
+      "Are you sure you want to clear all pharmacy data? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Clear All",
+          style: "destructive",
+          onPress: async () => {
+            clearAllPharmacies();
+          },
+        },
+      ],
+    );
+  };
   return (
     <LinearGradient
       colors={[Colors.honey.color2, Colors.honey.color1]}
@@ -28,6 +50,13 @@ export default function AllPharmaciesScreen() {
           >
             <Ionicons name="add-circle" size={24} color="white" />
             <Text style={styles.addButtonText}>Add Pharmacy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => handleClearAllMedications()}
+          >
+            <Ionicons name="remove-circle-outline" size={24} color="white" />
+            <Text style={styles.clearButtonText}>Clear All Pharmacies</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -60,6 +89,24 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   addButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  clearButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.4)",
+    marginTop: 20,
+    gap: 8,
+  },
+  clearButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",

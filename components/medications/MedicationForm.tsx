@@ -30,10 +30,10 @@ export default function MedicationForm({
   medication?: Medication;
 }) {
   const { mutate: addMedication } = useAddMedication({
-    successRedirectPath: "/home",
+    successRedirectPath: "/medications",
   });
   const { mutate: updateMedication } = useUpdateMedication({
-    successRedirectPath: "/home",
+    successRedirectPath: "/medications",
   });
   const { data: pharmacies, isLoading: isLoadingPharmacies } = usePharmacies();
   const { data: providers, isLoading: isLoadingProviders } = useProviders();

@@ -4,23 +4,22 @@ import { Pharmacy } from "@/data/pharmacy";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { ActionButton } from "../actions/ActionButton";
+import { ActionLink } from "../actions/ActionLink";
 
 export default function PharmacyItemDetails({
   pharmacy,
+  handleDeletePharmacy,
 }: {
   pharmacy: Pharmacy;
+  handleDeletePharmacy: () => void;
 }) {
   const router = useRouter();
-  const handleEditMedication = () => {
-    router.replace({
-      pathname: "/pharmacies/add",
-      params: { id: pharmacy.id },
-    });
-  };
+  const allowDelete = false;
   return (
     <View style={styles.content}>
       <View key={pharmacy.id} style={styles.pharmacyCard}>
-        <PharmacyBadge handlePress={handleEditMedication} />
+        <PharmacyBadge handlePress={() => router.back()} />
         <View style={styles.pharmacyInfo}>
           <View>
             <Text style={styles.pharmacyName}>{pharmacy.name}</Text>
@@ -35,6 +34,22 @@ export default function PharmacyItemDetails({
           </View>
         </View>
       </View>
+      <View style={styles.actions}>
+        <ActionLink
+          label="Update Pharmacy"
+          icon="create-outline"
+          color={Colors.pharmacy}
+          route={`/pharmacies/add?id=${pharmacy.id}`}
+        />
+        {allowDelete && (
+          <ActionButton
+            label="Delete Pharmacy"
+            icon="remove-circle-outline"
+            color={Colors.pharmacy}
+            handlePress={handleDeletePharmacy}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -42,48 +57,6 @@ export default function PharmacyItemDetails({
 const styles = StyleSheet.create({
   content: {
     padding: 20,
-  },
-  card: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#000",
-    overflow: "hidden",
-    boxShadow: "0px 4px 2px -2px rgba(0,0,0, 0.2)",
-    elevation: 2,
-  },
-  image: {
-    width: "100%",
-    height: 180,
-  },
-  info: {
-    padding: 12,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  description: {
-    fontSize: 14,
-    color: Colors.muted,
-  },
-  metadata: {
-    // borderTopColor: Colors.light,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    padding: 10,
-  },
-  metadataText: {
-    fontSize: 13,
-    color: Colors.muted,
-  },
-  dot: {
-    color: "#999",
-    fontSize: 13,
   },
   pharmacyCard: {
     flexDirection: "row",
@@ -129,5 +102,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: "#666",
     fontSize: 14,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 10,
   },
 });

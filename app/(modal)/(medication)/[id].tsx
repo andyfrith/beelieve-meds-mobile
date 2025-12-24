@@ -1,9 +1,10 @@
 import MedicationItemDetails from "@/components/medications/MedicationItemDetails";
 import { Colors } from "@/constants/theme";
+import { useDeleteMedication } from "@/hooks/medications/useDeleteMedication";
 import { useMedication } from "@/hooks/medications/useMedications";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
 export default function MedicationItemDetailsScreen({
   headerTitle,
@@ -12,7 +13,29 @@ export default function MedicationItemDetailsScreen({
 }) {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: medication, isLoading, error } = useMedication(id);
-
+  const { mutate: deleteMedication } = useDeleteMedication({
+    successRedirectPath: "/medications",
+  });
+  const handleDeleteMedication = () => {
+    Alert.alert(
+      "Delete Medication",
+      "Are you sure you want to delete medication data? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes, Delete Medication",
+          style: "destructive",
+          onPress: async () => {
+            router.back();
+            deleteMedication(id);
+          },
+        },
+      ],
+    );
+  };
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -44,7 +67,10 @@ export default function MedicationItemDetailsScreen({
           <Text style={styles.sectionTitle}>{headerTitle}</Text>
         </View>
       )}
-      <MedicationItemDetails medication={medication} />
+      <MedicationItemDetails
+        medication={medication}
+        handleDeleteMedication={handleDeleteMedication}
+      />
     </View>
   );
 }

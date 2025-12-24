@@ -4,11 +4,15 @@ import { Provider } from "@/data/provider";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { ActionButton } from "../actions/ActionButton";
+import { ActionLink } from "../actions/ActionLink";
 
 export default function ProviderItemDetails({
   provider,
+  handleDeleteProvider,
 }: {
   provider: Provider;
+  handleDeleteProvider: () => void;
 }) {
   const router = useRouter();
   const handleEditProvider = () => {
@@ -17,6 +21,7 @@ export default function ProviderItemDetails({
       params: { id: provider.id },
     });
   };
+  const allowDelete = false;
   return (
     <View style={styles.content}>
       <View key={provider.id} style={styles.providerCard}>
@@ -35,6 +40,22 @@ export default function ProviderItemDetails({
           </View>
         </View>
       </View>
+      <View style={styles.actions}>
+        <ActionLink
+          label="Update Provider"
+          icon="create-outline"
+          color={Colors.provider}
+          route={`/providers/add?id=${provider.id}`}
+        />
+        {allowDelete && (
+          <ActionButton
+            label="Delete Provider"
+            icon="remove-circle-outline"
+            color={Colors.provider}
+            handlePress={handleDeleteProvider}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -42,48 +63,6 @@ export default function ProviderItemDetails({
 const styles = StyleSheet.create({
   content: {
     padding: 20,
-  },
-  card: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#000",
-    overflow: "hidden",
-    boxShadow: "0px 4px 2px -2px rgba(0,0,0, 0.2)",
-    elevation: 2,
-  },
-  image: {
-    width: "100%",
-    height: 180,
-  },
-  info: {
-    padding: 12,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  description: {
-    fontSize: 14,
-    color: Colors.muted,
-  },
-  metadata: {
-    // borderTopColor: Colors.light,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    padding: 10,
-  },
-  metadataText: {
-    fontSize: 13,
-    color: Colors.muted,
-  },
-  dot: {
-    color: "#999",
-    fontSize: 13,
   },
   providerCard: {
     flexDirection: "row",
@@ -129,5 +108,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: "#666",
     fontSize: 14,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 10,
   },
 });

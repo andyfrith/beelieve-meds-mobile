@@ -5,27 +5,25 @@ import { useProvider } from "@/hooks/providers/useProviders";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { ActionButton } from "../actions/ActionButton";
+import { ActionLink } from "../actions/ActionLink";
 import MedicationBadge from "./MedicationBadge";
 
 export default function MedicationItemDetails({
   medication,
+  handleDeleteMedication,
 }: {
   medication: Medication;
+  handleDeleteMedication: () => void;
 }) {
   const router = useRouter();
   const { data: pharmacy } = usePharmacy(medication.pharmacyId || "");
   const { data: provider } = useProvider(medication.providerId || "");
-
-  const handleEditMedication = () => {
-    router.replace({
-      pathname: "/medications/add",
-      params: { id: medication.id },
-    });
-  };
+  const allowDelete = true;
   return (
     <View style={styles.content}>
       <View key={medication.id} style={styles.medicationCard}>
-        <MedicationBadge handlePress={handleEditMedication} />
+        <MedicationBadge handlePress={() => router.back()} />
         <View style={styles.doseInfo}>
           <View>
             <Text style={styles.medicineName}>{medication.name}</Text>
@@ -48,6 +46,22 @@ export default function MedicationItemDetails({
             </View>
           )}
         </View>
+      </View>
+      <View style={styles.actions}>
+        <ActionLink
+          label="Update Medication"
+          icon="create-outline"
+          color={Colors.medication}
+          route={`/medications/add?id=${medication.id}`}
+        />
+        {allowDelete && (
+          <ActionButton
+            label="Delete Medication"
+            icon="remove-circle-outline"
+            color={Colors.medication}
+            handlePress={handleDeleteMedication}
+          />
+        )}
       </View>
     </View>
   );
@@ -145,5 +159,9 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     color: "#666",
     fontSize: 13,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 10,
   },
 });
