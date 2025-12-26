@@ -3,10 +3,16 @@ import { Colors } from "@/constants/theme";
 import { Pharmacy } from "@/data/pharmacy";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { showLocation } from "react-native-map-link";
 import { ActionButton } from "../actions/ActionButton";
 import { ActionLink } from "../actions/ActionLink";
-
 export default function PharmacyItemDetails({
   pharmacy,
   handleDeletePharmacy,
@@ -16,6 +22,19 @@ export default function PharmacyItemDetails({
 }) {
   const router = useRouter();
   const allowDelete = false;
+  const handleOpenMap = () => {
+    showLocation({
+      address:
+        pharmacy.address.line1 +
+        ", " +
+        (pharmacy.address.line2 ? pharmacy.address.line2 + ", " : "") +
+        pharmacy.address.city +
+        ", " +
+        pharmacy.address.state +
+        " " +
+        pharmacy.address.zip,
+    });
+  };
   return (
     <View style={styles.content}>
       <View key={pharmacy.id} style={styles.pharmacyCard}>
@@ -23,14 +42,20 @@ export default function PharmacyItemDetails({
         <View style={styles.pharmacyInfo}>
           <View>
             <Text style={styles.pharmacyName}>{pharmacy.name}</Text>
-            <Text style={styles.addressText}>
-              {pharmacy.address.line1}, {pharmacy.address.city},{" "}
-              {pharmacy.address.state} {pharmacy.address.zip}
-            </Text>
+            <TouchableOpacity onPress={handleOpenMap}>
+              <Text style={styles.addressText}>
+                {pharmacy.address.line1}, {pharmacy.address.city},{" "}
+                {pharmacy.address.state} {pharmacy.address.zip}
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.contactInfo}>
             <Ionicons name="call-outline" size={16} color="#666" />
-            <Text style={styles.phoneText}>{pharmacy.phone}</Text>
+            <TouchableOpacity
+              onPress={() => Linking.openURL(`tel:${pharmacy.phone}`)}
+            >
+              <Text style={styles.phoneText}>{pharmacy.phone}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
