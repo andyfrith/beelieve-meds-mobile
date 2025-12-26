@@ -3,7 +3,14 @@ import { Colors } from "@/constants/theme";
 import { Provider } from "@/data/provider";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { showLocation } from "react-native-map-link";
 import { ActionButton } from "../actions/ActionButton";
 import { ActionLink } from "../actions/ActionLink";
 
@@ -21,6 +28,19 @@ export default function ProviderItemDetails({
       params: { id: provider.id },
     });
   };
+  const handleOpenMap = () => {
+    showLocation({
+      address:
+        provider.address.line1 +
+        ", " +
+        (provider.address.line2 ? provider.address.line2 + ", " : "") +
+        provider.address.city +
+        ", " +
+        provider.address.state +
+        " " +
+        provider.address.zip,
+    });
+  };
   const allowDelete = false;
   return (
     <View style={styles.content}>
@@ -29,14 +49,20 @@ export default function ProviderItemDetails({
         <View style={styles.providerInfo}>
           <View>
             <Text style={styles.providerName}>{provider.name}</Text>
-            <Text style={styles.addressText}>
-              {provider.address.line1}, {provider.address.city},{" "}
-              {provider.address.state} {provider.address.zip}
-            </Text>
+            <TouchableOpacity onPress={handleOpenMap}>
+              <Text style={styles.addressText}>
+                {provider.address.line1}, {provider.address.city},{" "}
+                {provider.address.state} {provider.address.zip}
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.contactInfo}>
             <Ionicons name="call-outline" size={16} color="#666" />
-            <Text style={styles.phoneText}>{provider.phone}</Text>
+            <TouchableOpacity
+              onPress={() => Linking.openURL(`tel:${provider.phone}`)}
+            >
+              <Text style={styles.phoneText}>{provider.phone}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

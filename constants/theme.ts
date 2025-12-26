@@ -7,9 +7,9 @@ export const Colors = {
   primary: "#0a7ea4",
   secondary: "#ffbf00",
   muted: "#999",
-  provider: "#0077b6",
-  pharmacy: "#ffb100",
-  medication: "#2E7D32",
+  provider: "#ed8c00", // "#0077b6",
+  pharmacy: "#ed8c00", // "#ffb100",
+  medication: "#ed8c00", // "#2E7D32",
 
   light: {
     text: "#11181C",

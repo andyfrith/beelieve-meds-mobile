@@ -168,9 +168,15 @@ export default function MedicationForm({
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
           >
-            <Text style={styles.saveButtonText}>
-              {isSubmitting ? "Adding..." : "Add Medication"}
-            </Text>
+            {medication ? (
+              <Text style={styles.saveButtonText}>
+                {isSubmitting ? "Updating..." : "Update Medication"}
+              </Text>
+            ) : (
+              <Text style={styles.saveButtonText}>
+                {isSubmitting ? "Adding..." : "Add Medication"}
+              </Text>
+            )}
           </LinearGradient>
         </TouchableOpacity>
         <TouchableOpacity
@@ -419,7 +425,7 @@ export default function MedicationForm({
               onPress={() => {}}
             >
               <View style={styles.timeIconContainer}>
-                <Ionicons name="time-outline" size={20} color="#1a8e2d" />
+                <Ionicons name="time-outline" size={20} color="orange" />
               </View>
               <DateTimePicker
                 value={(() => {
